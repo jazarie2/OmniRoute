@@ -206,8 +206,14 @@ export function resolveStaticProviderCatalogEntry(
  * persist an `apikey` connection (the reliable BYOK path) while the provider
  * stays OAuth-primary (isOAuth=true). clinepass is the dual-auth case: sign in
  * with a Cline account OR paste a ClinePass API key.
+ *
+ * github: device flow stays primary, but a Copilot-entitled GitHub OAuth user
+ * token (gho_/ghu_ — e.g. `gh auth token` or the VS Code Copilot login) can be
+ * pasted as an API key; GithubExecutor treats `apiKey` as the GitHub access
+ * token and mints the short-lived Copilot token from it. Classic/fine-grained
+ * PATs do not work — the copilot_internal/v2/token exchange rejects them.
  */
-const DUAL_AUTH_APIKEY_PROVIDER_IDS = new Set<string>(["clinepass"]);
+const DUAL_AUTH_APIKEY_PROVIDER_IDS = new Set<string>(["clinepass", "github"]);
 
 export function isManagedProviderConnectionId(providerId: string): boolean {
   if (supportsApiKeyOnFreeProvider(providerId)) return true;

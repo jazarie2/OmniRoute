@@ -37,6 +37,13 @@ export class GithubExecutor extends BaseExecutor {
     return credentials?.copilotToken || credentials?.providerSpecificData?.copilotToken || null;
   }
 
+  // Dual-auth (BYOK): apikey-type connections store the Copilot-entitled GitHub
+  // OAuth user token (gho_/ghu_) in `apiKey` — treat it exactly like the device
+  // flow's accessToken when minting the Copilot token.
+  getGitHubAccessToken(credentials: ProviderCredentials | null | undefined) {
+    return credentials?.accessToken || credentials?.apiKey || null;
+  }
+
   getCopilotTokenExpiresAt(credentials: Record<string, any> | null | undefined) {
     return (
       credentials?.copilotTokenExpiresAt ||
@@ -296,7 +303,8 @@ export class GithubExecutor extends BaseExecutor {
     clientHeaders?: Record<string, string> | null,
     model?: string
   ): Record<string, string> {
-    const token = this.getCopilotToken(credentials) || credentials.accessToken;
+    const token =
+      this.getCopilotToken(credentials) || credentials.accessToken || credentials.apiKey;
     const initiator = this.resolveInitiatorHeader(clientHeaders);
 
     const headers: Record<string, string> = {
@@ -388,7 +396,7 @@ export class GithubExecutor extends BaseExecutor {
   }
 
   async refreshCredentials(credentials, log): Promise<RefreshedCopilotCredentials | null> {
-    let copilotResult = await this.refreshCopilotToken(credentials.accessToken, log);
+    let copilotResult = await this.refreshCopilotToken(this.getGitHubAccessToken(credentials), log);
 
     if (!copilotResult && credentials.refreshToken) {
       const githubTokens = await this.refreshGitHubToken(credentials.refreshToken, log);
