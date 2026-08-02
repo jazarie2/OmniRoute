@@ -72,6 +72,8 @@ const executors = {
   antigravity: new AntigravityExecutor(),
   agy: new AntigravityExecutor(),
   github: new GithubExecutor(),
+  // API-key twin: pasted Copilot-entitled GitHub token (gho_/ghu_) as apiKey.
+  "github-copilot": new GithubExecutor("github-copilot"),
   "ghe-copilot": new GheCopilotExecutor(),
   qoder: new QoderExecutor(),
   kiro: new KiroExecutor(),

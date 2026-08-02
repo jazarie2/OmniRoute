@@ -1600,7 +1600,7 @@ export async function GET(
       });
     }
 
-    if (provider === "github") {
+    if (provider === "github" || provider === "github-copilot") {
       // #3120/#3121 — GitHub Copilot's catalog is per-account and dynamic. The
       // registry static list never refreshes and advertises non-entitled models
       // (e.g. gemini previews) that fail upstream when tested. Discover the live

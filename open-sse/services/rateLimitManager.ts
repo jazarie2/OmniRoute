@@ -495,7 +495,7 @@ function getLimiterKey(provider, connectionId, model = null) {
   }
   // Gemini AI Studio and GitHub Copilot have per-model quotas — use model-scoped
   // limiter keys so a 429 on one model doesn't pause requests for other models.
-  if ((provider === "gemini" || provider === "github") && model) {
+  if ((provider === "gemini" || provider === "github" || provider === "github-copilot") && model) {
     return `${provider}:${connectionId}:${model}`;
   }
   return `${provider}:${connectionId}`;

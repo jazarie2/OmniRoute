@@ -35,7 +35,13 @@ const PROVIDERS_WITHOUT_SYSTEM_ROLE = new Set([
  * Operators can still force preservation per-model via the dashboard
  * "Compatibility → preserveOpenAIDeveloperRole = true" toggle.
  */
-const PROVIDERS_PRESERVING_DEVELOPER_ROLE = new Set(["openai", "azure-openai", "azure", "github"]);
+const PROVIDERS_PRESERVING_DEVELOPER_ROLE = new Set([
+  "openai",
+  "azure-openai",
+  "azure",
+  "github",
+  "github-copilot",
+]);
 
 function defaultPreserveDeveloperForProvider(provider: string): boolean {
   const id = provider.trim().toLowerCase();

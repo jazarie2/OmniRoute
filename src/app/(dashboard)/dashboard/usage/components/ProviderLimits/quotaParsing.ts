@@ -214,7 +214,7 @@ function parseDeepseek(data: any) {
 }
 
 function parseProviderQuotas(providerId: string, data: any) {
-  if (providerId === "github") return parseGithub(data);
+  if (providerId === "github" || providerId === "github-copilot") return parseGithub(data);
   if (["glm", "glm-cn", "glmt", "opencode-go"].includes(providerId)) return parseGlmFamily(data);
   if (providerId === "antigravity" || providerId === "agy") return parseAntigravity(data);
   if (providerId === "codex") return parseCodex(data);

@@ -36,6 +36,9 @@ export async function getUsageForProvider(connection) {
   switch (provider) {
     case "github":
       return await getGitHubUsage(accessToken, providerSpecificData);
+    case "github-copilot":
+      // API-key twin: the Copilot-entitled GitHub token lives in apiKey.
+      return await getGitHubUsage(connection.apiKey || accessToken, providerSpecificData);
     case "antigravity":
     case "agy":
       return await getAntigravityUsage(

@@ -29,12 +29,24 @@ export interface RefreshedCopilotCredentials {
 }
 
 export class GithubExecutor extends BaseExecutor {
-  constructor() {
-    super("github", PROVIDERS.github);
+  // Also serves the API-key twin `github-copilot` (registry/github/copilot-apikey):
+  // same endpoints and model catalog, but the credential is a pasted
+  // Copilot-entitled GitHub OAuth user token (gho_/ghu_) stored in `apiKey`.
+  // The optional config override is for subclasses with their own endpoint set
+  // (GheCopilotExecutor).
+  constructor(provider = "github", config = PROVIDERS[provider]) {
+    super(provider, config);
   }
 
   getCopilotToken(credentials: Record<string, any> | null | undefined) {
     return credentials?.copilotToken || credentials?.providerSpecificData?.copilotToken || null;
+  }
+
+  // BYOK twin: apikey-type connections store the Copilot-entitled GitHub OAuth
+  // user token (gho_/ghu_) in `apiKey` — treat it exactly like the device
+  // flow's accessToken when minting the Copilot token.
+  getGitHubAccessToken(credentials: ProviderCredentials | null | undefined) {
+    return credentials?.accessToken || credentials?.apiKey || null;
   }
 
   getCopilotTokenExpiresAt(credentials: Record<string, any> | null | undefined) {
@@ -296,7 +308,8 @@ export class GithubExecutor extends BaseExecutor {
     clientHeaders?: Record<string, string> | null,
     model?: string
   ): Record<string, string> {
-    const token = this.getCopilotToken(credentials) || credentials.accessToken;
+    const token =
+      this.getCopilotToken(credentials) || credentials.accessToken || credentials.apiKey;
     const initiator = this.resolveInitiatorHeader(clientHeaders);
 
     const headers: Record<string, string> = {
@@ -388,7 +401,7 @@ export class GithubExecutor extends BaseExecutor {
   }
 
   async refreshCredentials(credentials, log): Promise<RefreshedCopilotCredentials | null> {
-    let copilotResult = await this.refreshCopilotToken(credentials.accessToken, log);
+    let copilotResult = await this.refreshCopilotToken(this.getGitHubAccessToken(credentials), log);
 
     if (!copilotResult && credentials.refreshToken) {
       const githubTokens = await this.refreshGitHubToken(credentials.refreshToken, log);

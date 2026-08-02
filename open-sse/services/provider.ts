@@ -371,9 +371,10 @@ export function buildProviderHeaders(provider, credentials, stream = true, body 
     if (!headers["anthropic-version"]) {
       headers["anthropic-version"] = "2023-06-01";
     }
-  } else if (provider === "github") {
-    // GitHub Copilot requires special dynamic headers (x-request-id)
-    const githubToken = credentials.copilotToken || credentials.accessToken;
+  } else if (provider === "github" || provider === "github-copilot") {
+    // GitHub Copilot requires special dynamic headers (x-request-id).
+    // github-copilot twin: the GitHub token lives in apiKey, not accessToken.
+    const githubToken = credentials.copilotToken || credentials.accessToken || credentials.apiKey;
     headers["Authorization"] = `Bearer ${githubToken}`;
     headers["x-request-id"] = crypto.randomUUID
       ? crypto.randomUUID()

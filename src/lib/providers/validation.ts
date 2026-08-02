@@ -92,6 +92,7 @@ import {
   validateHuggingFaceProvider,
   validateOpenAICompatibleProvider,
 } from "./validation/openaiFormat";
+import { validateGithubCopilotTokenProvider } from "./validation/githubCopilot";
 import {
   validateAnthropicLikeProvider,
   validateAnthropicCompatibleProvider,
@@ -182,6 +183,10 @@ export async function validateProviderApiKey({ provider, apiKey, providerSpecifi
     kiro: validateKiroProvider,
     "command-code": validateCommandCodeProvider,
     huggingface: validateHuggingFaceProvider,
+    // API-key twin of the OAuth github provider: the key is a gho_/ghu_ GitHub
+    // token, so validation must mint the Copilot bearer instead of probing
+    // api.githubcopilot.com directly (which would always 401 on the raw token).
+    "github-copilot": validateGithubCopilotTokenProvider,
     // #5422: auth-only probe — Bytez 404s on every chat model until the account adds it to
     // its catalog, so the generic chat probe can't validate a fresh key.
     bytez: validateBytezProvider,

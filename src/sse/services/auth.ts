@@ -950,6 +950,10 @@ export { fisherYatesShuffle, getNextFromDeckSync as getNextFromDeck };
 const PROVIDER_SEARCH_PAIRS: string[][] = [
   ["nvidia", "nvidia_nim"],
   ["kimi-coding", "kimi-coding-apikey"],
+  // OAuth device-flow twin + pasted gho_/ghu_ token twin share one Copilot pool:
+  // a request for either id can be served by connections of both, and the
+  // GithubExecutor handles apiKey-or-accessToken credentials transparently.
+  ["github", "github-copilot"],
 ];
 /**
  * Resolve provider aliases (e.g., nvidia -> nvidia_nim) for DB lookup

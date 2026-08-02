@@ -145,6 +145,21 @@ export const APIKEY_PROVIDERS_INFERENCE = {
     freeNote: "Free GPT-5, o-series, DeepSeek-R1, Llama 4, Grok 3 — GitHub account only.",
     authHint: "Create a GitHub PAT with 'models: read' scope at github.com/settings/tokens",
   },
+  // API-key twin of the OAuth `github` provider: paste a Copilot-entitled GitHub
+  // OAuth user token (gho_/ghu_) instead of running the device flow. One
+  // connection per token = clean multi-account. PATs (ghp_/github_pat_) do NOT
+  // work — the Copilot token exchange rejects them.
+  "github-copilot": {
+    id: "github-copilot",
+    alias: "ghcp",
+    name: "GitHub Copilot (Token)",
+    icon: "code",
+    color: "#333333",
+    textIcon: "CP",
+    website: "https://github.com/features/copilot",
+    authHint:
+      "Paste a Copilot-entitled GitHub OAuth user token (gho_/ghu_) — e.g. from `gh auth token` or the VS Code Copilot sign-in. Classic/fine-grained PATs are rejected by the Copilot token exchange.",
+  },
   deepinfra: {
     id: "deepinfra",
     alias: "deepinfra",

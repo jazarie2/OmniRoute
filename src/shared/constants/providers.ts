@@ -420,6 +420,9 @@ export const USAGE_SUPPORTED_PROVIDERS = [
   "kiro",
   "amazon-q",
   "github",
+  // API-key twin (pasted gho_/ghu_ token) — same Copilot usage endpoint.
+  "github-copilot",
+  "ghcp",
   "codex",
   "claude",
   "cursor",
