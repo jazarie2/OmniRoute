@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   semgrep:
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted", "Linux", "X64"]
     container:
       image: semgrep/semgrep
     steps:

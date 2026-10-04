@@ -25,7 +25,7 @@ jobs:
   # path filters share existence reasons: code / docs / i18n / workflow.
   changes:
     name: Change Classification
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted", "Linux", "X64"]
     outputs:
       code: ${{ steps.classify.outputs.code }}
       docs: ${{ steps.classify.outputs.docs }}
@@ -62,7 +62,7 @@ jobs:
     needs: changes
     if: ${{ github.event_name != 'pull_request' || ((github.event.pull_request.draft == false || startsWith(github.head_ref, 'mergify/merge-queue/')) && needs.changes.outputs.code == 'true') }}
     # Dynamic runner — same fork-safe rule as ci.yml / fast-gates.
-    runs-on: ${{ (vars.USE_VPS_RUNNER == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","omni-release"]') || 'ubuntu-latest' }}
+    runs-on: ["self-hosted", "Linux", "X64"]
     # #7307: advisory for the first week of release-PR runs; remove
     # continue-on-error after the production-build signal is stable.
     continue-on-error: true
@@ -88,7 +88,7 @@ jobs:
     name: Docs Gates (fast-path)
     needs: changes
     if: ${{ github.event_name != 'pull_request' || ((github.event.pull_request.draft == false || startsWith(github.head_ref, 'mergify/merge-queue/')) && (needs.changes.outputs.docs == 'true' || needs.changes.outputs.code == 'true')) }}
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted", "Linux", "X64"]
     steps:
       - uses: actions/checkout@v7
         with:
@@ -125,7 +125,7 @@ jobs:
     #
     # With this pinned, USE_VPS_RUNNER governs ONLY build-like jobs — one variable, one coherent
     # purpose. That is what gap 19 asked for; a second variable turned out to be unnecessary.
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted", "Linux", "X64"]
     # tsx gates (known-symbols, route-guard-membership) import modules that open
     # SQLite on load; provide DB env so a fresh CI DB initializes cleanly.
     env:
@@ -279,7 +279,7 @@ jobs:
     # actions/setup-node took 20m06s on .113 with 4 concurrent runners versus 16s hosted (npm
     # cache restore saturating the link), while the tests themselves tied, 2m54 vs 2m31. So
     # self-hosted is strictly worse here and there is nothing to configure.
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted", "Linux", "X64"]
     env:
       JWT_SECRET: ci-lint-secret-with-sufficient-length-for-validation
       API_KEY_SECRET: ci-lint-api-key-secret-long
@@ -321,7 +321,7 @@ jobs:
     # actions/setup-node took 20m06s on .113 with 4 concurrent runners versus 16s hosted (npm
     # cache restore saturating the link), while the tests themselves tied, 2m54 vs 2m31. So
     # self-hosted is strictly worse here and there is nothing to configure.
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted", "Linux", "X64"]
     strategy:
       fail-fast: false
       matrix:
@@ -362,7 +362,7 @@ jobs:
     name: No new ESLint warnings
     needs: changes
     if: ${{ github.event_name != 'pull_request' || ((github.event.pull_request.draft == false || startsWith(github.head_ref, 'mergify/merge-queue/')) && needs.changes.outputs.code == 'true') }}
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted", "Linux", "X64"]
     continue-on-error: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == true }}
     steps:
       - uses: actions/checkout@v7
@@ -401,7 +401,7 @@ jobs:
     name: Merge integrity (changelog + generated skills)
     # Always on non-draft PRs — CHANGELOG/skills can break on docs-only merges too.
     if: ${{ github.event_name != 'pull_request' || (github.event.pull_request.draft == false || startsWith(github.head_ref, 'mergify/merge-queue/')) }}
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted", "Linux", "X64"]
     continue-on-error: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == true }}
     env:
       JWT_SECRET: ci-lint-secret-with-sufficient-length-for-validation
