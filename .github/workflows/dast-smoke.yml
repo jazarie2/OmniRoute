@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   dast-smoke:
-    runs-on: ubuntu-latest
+    runs-on: ["self-hosted", "Linux", "X64"]
     # ADVISORY while this new gate matures (repo convention: advisory -> blocking).
     # Flip to blocking (remove continue-on-error) once it's proven stable across a few PRs.
     continue-on-error: true
